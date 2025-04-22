@@ -9,49 +9,63 @@ jobs:
     steps:
       - name: "Checkout repo"
         uses: actions/checkout@v4
-        
+
   install-dep: 
     - name: Install dependencies
       runs-on: [self-hosted, linux, CPSC334]
       timeout-minutes: 2
-      run: |
-          sudo apt-get update
-          sudo apt install -y make python3 python3-pytest
+      needs: [checkout]
+      steps:
+        run: |
+            sudo apt-get update
+            sudo apt install -y make python3 python3-pytest
 
   test:
     - name: Test
       runs-on: [self-hosted, linux, CPSC334]
       timeout-minutes: 2
-      run: |
-        make test
+      needs: [checkout, install-dep]
+      steps:
+        run: |
+          make test
 
   build:
     - name: Build
       runs-on: [self-hosted, linux, CPSC334]
       timeout-minutes: 2
-      run: make build
+      needs: [checkout, install-dep, test]
+      steps:
+        run: make build
 
   build-deb:
     - name: Build Debian
       runs-on: [self-hosted, linux, CPSC334]
       timeout-minutes: 2
-      run: | 
-        make build-deb
-        rm -r tmp
+      needs: [checkout, install-dep, test, build]
+      steps:
+        run: | 
+          make build-deb
+          rm -r tmp
   lint:
     - name: Lint Debian
       runs-on: [self-hosted, linux, CPSC334]
       timeout-minutes: 2
-      run: make lint-deb || true
+      needs: [checkout, install-dep, test, build, build-deb]
+      steps:
+        run: make lint-deb || true
   
   dpkg:
     - name: Depack Debian
       runs-on: [self-hosted, linux, CPSC334]
       timeout-minutes: 2
-      run: sudo dpkg -i mypl.deb
+      needs: [checkout, install-dep, test, build, build-deb]
+      steps:
+        run: sudo dpkg -i mypl.deb
     
   run:
     - name: Run mypl.py command
       runs-on: [self-hosted, linux, CPSC334]
       timeout-minutes: 2
+      needs: [checkout, install-dep, test, build, build-deb, dpkg]
+      steps:
       run: mypl.py examples/example_10_prog.mypl
