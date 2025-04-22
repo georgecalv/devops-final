@@ -32,4 +32,6 @@ jobs:
         run: make lint-deb || true
       
       - name: Try prog
-        run: mypl.py examples/example_10_prog.mypl
+        run: | 
+            dpkg -i mypl.deb
+            mypl.py examples/example_10_prog.mypl
