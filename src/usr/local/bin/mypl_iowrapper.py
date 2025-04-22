@@ -1,6 +1,6 @@
 """The MyPL Lexer class.
 
-NAME: <your name here>
+NAME: George Calvert
 DATE: Spring 2024
 CLASS: CPSC 326
 

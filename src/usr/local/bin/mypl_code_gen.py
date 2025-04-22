@@ -1,6 +1,6 @@
 """IR code generator for converting MyPL to VM Instructions. 
 
-NAME: <your name here>
+NAME: George Calvert
 DATE: Spring 2024
 CLASS: CPSC 326
 

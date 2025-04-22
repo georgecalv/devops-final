@@ -1,6 +1,6 @@
 """Print Visitor for pretty printing a MyPL program.
 
-NAME: <your name here>
+NAME: George Calvert
 DATE: Spring 2024
 CLASS: CPSC 326
 
