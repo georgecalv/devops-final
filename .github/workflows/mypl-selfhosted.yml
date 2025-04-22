@@ -1,9 +1,9 @@
 name: Self-Hosted Github Actions for mypl
-run-name: Self Hosted Jobs with docker
+run-name: Self Hosted Jobs
 on: [push]
 jobs:
   build-and-copy:
-    name: Build on Self Hosted Runner with Docker
+    name: Build on Self Hosted Runner
     runs-on: [self-hosted, linux, CPSC334]
     timeout-minutes: 2
     steps:
