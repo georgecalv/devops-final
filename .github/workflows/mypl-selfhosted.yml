@@ -1,0 +1,35 @@
+name: Self-Hosted Github Actions for mypl
+run-name: Self Hosted Jobs with docker
+on: [push]
+jobs:
+  build-and-copy:
+    name: Build on Self Hosted Runner with Docker
+    runs-on: [self-hosted, linux, CPSC334]
+    timeout-minutes: 2
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@v4
+  
+      - name: Install dependencies
+        run: |
+            apt-get update
+            apt install -y make python3 python3-pytest
+      
+      - name: Test
+        run: |
+          make test
+      
+      - name: Build
+        run: |
+          make build
+
+      - name: Build deb
+        run: |
+            make build-deb
+            rm -r tmp
+      
+      - name: Lint deb
+        run: make lint-deb
+      
+      - name: Try prog
+        run: mypl.py examples/example_10_prog.mypl
