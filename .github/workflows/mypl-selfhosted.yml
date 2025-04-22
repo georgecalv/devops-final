@@ -2,38 +2,56 @@ name: Self-Hosted Github Actions for mypl
 run-name: Self Hosted Jobs
 on: [push]
 jobs:
-  build-and-copy:
-    name: Build on Self Hosted Runner
+  checkout:
+    name: Checkout repo
     runs-on: [self-hosted, linux, CPSC334]
     timeout-minutes: 2
     steps:
       - name: "Checkout repo"
         uses: actions/checkout@v4
-  
-      - name: Install dependencies
-        run: |
-            sudo apt-get update
-            sudo apt install -y make python3 python3-pytest
-      
-      - name: Test
-        run: |
-          make test
-      
-      - name: Build
-        run: |
-          make build
+        
+  install-dep: 
+    - name: Install dependencies
+      runs-on: [self-hosted, linux, CPSC334]
+      timeout-minutes: 2
+      run: |
+          sudo apt-get update
+          sudo apt install -y make python3 python3-pytest
 
-      - name: Build deb
-        run: |
-            make build-deb
-            rm -r tmp
-      
-      - name: Lint deb
-        run: make lint-deb || true
-      
-      - name: Dpkg
-        run: sudo dpkg -i mypl.deb
-      
-      - name: Run command
-        run: | 
-            mypl.py examples/example_10_prog.mypl
+  test:
+    - name: Test
+      runs-on: [self-hosted, linux, CPSC334]
+      timeout-minutes: 2
+      run: |
+        make test
+
+  build:
+    - name: Build
+      runs-on: [self-hosted, linux, CPSC334]
+      timeout-minutes: 2
+      run: make build
+
+  build-deb:
+    - name: Build Debian
+      runs-on: [self-hosted, linux, CPSC334]
+      timeout-minutes: 2
+      run: | 
+        make build-deb
+        rm -r tmp
+  lint:
+    - name: Lint Debian
+      runs-on: [self-hosted, linux, CPSC334]
+      timeout-minutes: 2
+      run: make lint-deb || true
+  
+  dpkg:
+    - name: Depack Debian
+      runs-on: [self-hosted, linux, CPSC334]
+      timeout-minutes: 2
+      run: sudo dpkg -i mypl.deb
+    
+  run:
+    - name: Run mypl.py command
+      runs-on: [self-hosted, linux, CPSC334]
+      timeout-minutes: 2
+      run: mypl.py examples/example_10_prog.mypl
