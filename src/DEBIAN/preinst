@@ -1,5 +1,0 @@
-#!/bin/bash 
-echo "pre install starting"
-sudo chown root: /usr/local/bin/mypl.py
-sudo chmod 755 /usr/local/bin/mypl.py
-echo "pre install finished"
