@@ -10,62 +10,70 @@ jobs:
       - name: "Checkout repo"
         uses: actions/checkout@v4
 
-  install-dep: 
-    - name: Install dependencies
-      runs-on: [self-hosted, linux, CPSC334]
-      timeout-minutes: 2
-      needs: [checkout]
-      steps:
+  install-dep:
+    name: Install dependencies
+    runs-on: [self-hosted, linux, CPSC334]
+    timeout-minutes: 2
+    needs: [checkout]
+    steps:
+      - name: Install packages
         run: |
-            sudo apt-get update
-            sudo apt install -y make python3 python3-pytest
+          sudo apt-get update
+          sudo apt install -y make python3 python3-pytest
 
   test:
-    - name: Test
-      runs-on: [self-hosted, linux, CPSC334]
-      timeout-minutes: 2
-      needs: [checkout, install-dep]
-      steps:
+    name: Test
+    runs-on: [self-hosted, linux, CPSC334]
+    timeout-minutes: 2
+    needs: [checkout, install-dep]
+    steps:
+      - name: Run tests
         run: |
           make test
 
   build:
-    - name: Build
-      runs-on: [self-hosted, linux, CPSC334]
-      timeout-minutes: 2
-      needs: [checkout, install-dep, test]
-      steps:
+    name: Build
+    runs-on: [self-hosted, linux, CPSC334]
+    timeout-minutes: 2
+    needs: [checkout, install-dep, test]
+    steps:
+      - name: Build project
         run: make build
 
   build-deb:
-    - name: Build Debian
-      runs-on: [self-hosted, linux, CPSC334]
-      timeout-minutes: 2
-      needs: [checkout, install-dep, test, build]
-      steps:
+    name: Build Debian
+    runs-on: [self-hosted, linux, CPSC334]
+    timeout-minutes: 2
+    needs: [checkout, install-dep, test, build]
+    steps:
+      - name: Create Debian package
         run: | 
           make build-deb
           rm -r tmp
+
   lint:
-    - name: Lint Debian
-      runs-on: [self-hosted, linux, CPSC334]
-      timeout-minutes: 2
-      needs: [checkout, install-dep, test, build, build-deb]
-      steps:
+    name: Lint Debian
+    runs-on: [self-hosted, linux, CPSC334]
+    timeout-minutes: 2
+    needs: [checkout, install-dep, test, build, build-deb]
+    steps:
+      - name: Run linting
         run: make lint-deb || true
   
   dpkg:
-    - name: Depack Debian
-      runs-on: [self-hosted, linux, CPSC334]
-      timeout-minutes: 2
-      needs: [checkout, install-dep, test, build, build-deb]
-      steps:
+    name: Depack Debian
+    runs-on: [self-hosted, linux, CPSC334]
+    timeout-minutes: 2
+    needs: [checkout, install-dep, test, build, build-deb]
+    steps:
+      - name: Install DEB package
         run: sudo dpkg -i mypl.deb
     
   run:
-    - name: Run mypl.py command
-      runs-on: [self-hosted, linux, CPSC334]
-      timeout-minutes: 2
-      needs: [checkout, install-dep, test, build, build-deb, dpkg]
-      steps:
-      run: mypl.py examples/example_10_prog.mypl
+    name: Run mypl.py command
+    runs-on: [self-hosted, linux, CPSC334]
+    timeout-minutes: 2
+    needs: [checkout, install-dep, test, build, build-deb, dpkg]
+    steps:
+      - name: Execute mypl
+        run: mypl.py examples/example_10_prog.mypl
