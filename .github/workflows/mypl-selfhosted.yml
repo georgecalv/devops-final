@@ -33,5 +33,5 @@ jobs:
       
       - name: Try prog
         run: | 
-            dpkg -i mypl.deb
+            sudo dpkg -i mypl.deb
             mypl.py examples/example_10_prog.mypl
