@@ -1,9 +1,10 @@
 test: 
-	pytest mypl_tests.py
+	pytest ./src/usr/local/bin/mypl_tests.py
 build:
 	./build.sh
 clean:
 	./clean.sh
-build_deb:
-
+build-deb: build
+	./debBuild.sh
 lint-deb:
+	lintian mypl.deb

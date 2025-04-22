@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "starting pre rm"
+rm /usr/local/bin/mypl*.py
+echo "pre rm completed!"

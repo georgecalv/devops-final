@@ -1,0 +1,9 @@
+Package: mypl
+Version: 1.0-1
+Depends: python3, make
+Section: utils
+Priority: optional
+Architecture: all
+Maintainer: Calvert <gcalvert@zagmail.gonzaga.edu>
+Description: mypl programming language
+  custom terminal command to run any .mypl file. Example use: python3 mypl.py *.mypl
