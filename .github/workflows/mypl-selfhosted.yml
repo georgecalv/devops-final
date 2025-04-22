@@ -31,7 +31,9 @@ jobs:
       - name: Lint deb
         run: make lint-deb || true
       
-      - name: Try prog
+      - name: Dpkg
+        run: sudo dpkg -i mypl.deb
+      
+      - name: Run command
         run: | 
-            sudo dpkg -i mypl.deb
             mypl.py examples/example_10_prog.mypl
