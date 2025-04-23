@@ -1,0 +1,31 @@
+name: Save mypl artifact Self-Hosted
+run-name: Save Artifact
+on:
+  push:
+    tags: 
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  checkout:
+    name: Checkout repo
+    runs-on: [self-hosted, linux, CPSC334]
+    timeout-minutes: 2
+    steps:
+      - name: "Checkout repo"
+        uses: actions/checkout@v4
+
+  build-deb:
+    name: "Build Debian Package"
+    runs-on: [self-hosted, linux, CPSC334]
+    timeout-minutes: 2
+    needs: [checkout]
+    steps:
+      - name: Build deb release package
+        run: |
+          sudo make build-deb
+          sudo rm -r tmp
+      
+      - name: Upload DEB package as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: mypl-package
+          path: mypl*.deb
